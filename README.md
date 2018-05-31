@@ -21,7 +21,7 @@ Pipeline
 3_CreateTXTfile_EEG_EMG
   Function takes OutputSIG folder files and brings all channels into single file for each animal and day
   
-4_ - NOT IN GITHUB FOLDER - yet - plan to upload SikuliX script for automated version /n
+4_ - NOT IN GITHUB FOLDER - yet - plan to upload SikuliX script for automated version \n
   Neurotraces then run convert EDF to ASCII with sampling rate of 256 on each file
   This file then ready to be sleep scored
   
