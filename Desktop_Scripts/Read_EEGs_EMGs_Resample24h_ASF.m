@@ -16,6 +16,7 @@ pathsig=[path,'OutputSignals\']; mkdir(pathsig)
 
 %create string with name of tank in it
 tank='Fisk_AS_EEG_2018_04-180407-125210';
+
 %create list with all the recording names in the Tank
 recorddates=strvcat('180409-080242',...
                     '180410-080109',...
@@ -42,7 +43,7 @@ mousename='LL'
 
 %number of animals and number of channels variables 
 numanim=8;
-numchs=[4];
+numchs=4;
 
 %string with type of events - to be used in file name
 events1234=strvcat('EEG');
