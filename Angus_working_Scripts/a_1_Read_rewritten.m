@@ -82,7 +82,7 @@ end
 
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory 
-for item_no=3%:length(tanks_list)
+for item_no=1:length(tanks_list)
     
    %assigns block variable to be equal to the block name string
    block = tanks_list(item_no).name;
@@ -140,65 +140,8 @@ for item_no=3%:length(tanks_list)
        output_sampling_rate = 256;
        
        
-       %Now going to read the data from the tank+block in steps to avoid
-       %overloading memory. 
-       %While reading the events, we are going to grab the timestamps of
-       %the events and put them in a separate list
-       %The purpose of this loop is to get the correct number of events in
-       %the timestamps_list so that we can read the continuous events later
-       %making sure we get all the events.
-       
-       %firstly create some event counters 
-       %step_counter = 1; 
-       %events = 1;
-       %create empty list to hold the timestamps
-       %timestamp_list = [];
-       
-       %while loop as we will update the events variable each time through
-       %the loop, this ensures we keep reading until there are no more
-       %events to read %
-%       while events > 0
- %          
-  %         %define the start and end steps 
-   %      start_step = ((step_counter-1)*step)
-    %       end_sep = (step_counter*step)
-     %      
-      %     %Read events in steps 
-       %    events = TTX.ReadEventsV(max_events_return,... max events to return, sky high
-        %       events_to_read,... string of which events to read
-         %      0,... Channel - returns all channels
-          %     0,... Sortcode - disregards all sort codes
-           %    start_step,...where to start reading
-            %   end_step,... where to finish reading
-             %  'ALL');%Read all events in range
-%           
- %          %If there are still events being read
-  %         if (events > 0)
-   %           
-    %           %read the timestamps from the just read events - cached
-     %          %currently
-      %         timestamps = TTX.ParseEvInfoV(0,... Start at the start of the cache
-       %            events,... read the timestamps for the events we just read
-        %           6); %read just the timestamps
-         %      
-          %     %update the timestamp list with newly read
-           %    timestamp_list = cat(2,...dimension to concatenate along
-            %       timestamp_list,...original timestamp list
-             %      timestamps(1,end)); %all the timestamps just read
-              % 
-%           end %end if events are present statement
- %          
-  %         %increment the step counter
-   %        step_counter = step_counter + 1
-    %                     
-     %  end %end while events loop
-       
        %Create new list which is timestamps with 0 at the starts
        Timestamps_list = [0:step:1e+6];
-       %clear old list to go through loop again for next animal - don't
-       %actually need as we redefine as an empty list 
-       clear timestamp_list;
-       
        
        %Next step is to read the continuous variables waves
        %this needs to be done in chunks as otherwise will overload the
@@ -230,6 +173,17 @@ for item_no=3%:length(tanks_list)
                %set the read times to be global variables
                TTX.SetGlobalV('T1', start_read_time);
                TTX.SetGlobalV('T2', end_read_time);
+               %set the channel to be recording just the current channel
+               TTX.SetGlobalV('Channel', channel);
+               
+               %Readevents to cache all the events which might make faster?
+               TTX.ReadEventsV(max_events_return,... max number of events, very high
+                   events_to_read,... which events we want to read,
+                   channel,... which channel - going through all 
+                   0,... sort code- ignore
+                   start_read_time,... where to read from
+                   end_read_time,... where to read to
+                   'ALL');%Options read all 
                
                %read the continuous variables, reading the right animal and
                %signal as defined by events_to_read
