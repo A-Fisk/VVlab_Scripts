@@ -191,6 +191,8 @@ for dd=15:18
                     %understand how this works but it does!
                     y = invoke(TTX,'ReadWavesV',event);
                     
+                    length(y)
+                    
                     %add in the continuous events - something to do with
                     %resampling. don't understand the ' either
                     sig=[sig y'];

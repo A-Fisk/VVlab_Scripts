@@ -24,6 +24,9 @@ num_channels=4;
 %type of recording/output signal
 recording_type = 'EEG';
 
+%Visualise variable for resmpling 
+visualise = 0;
+
 
 
 %%Constants for reading from tanks
@@ -63,7 +66,7 @@ tanks_list = tank_specific_dir_obj(3:(length(tank_specific_dir_obj)-1));
 
 
 %Step two, create directory to hold outputs 
-output_path = [global_directory, 'Output_1'];
+output_path = [global_directory, 'Output_1\'];
 
 %only make output if doesn't exist
 if exist(output_path, 'dir') ~= 7
@@ -77,14 +80,15 @@ end
 %for single day
 %for single mouse
 
-current_block_string = [tank_specific_dir, tanks_list(5).name];
-
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory 
-for item_no=1%:length(tanks_list)
+for item_no=3%:length(tanks_list)
     
    %assigns block variable to be equal to the block name string
    block = tanks_list(item_no).name;
+   
+   %create variable of day name so we can save easily
+   day_name_string = tanks_list(item_no).name(6:11);
    
    
    %%%%%%% Development, just doing with one animal
@@ -125,7 +129,7 @@ for item_no=1%:length(tanks_list)
            0,...Sortcode - disregards all sort codes
            0,...T1 - starts reading at start of block
            1,...T2 - reads events until 1 - ???
-           'ALL') %Options - read all events records in range
+           'ALL'); %Options - read all events records in range
        
        %Read the sampling rate
        record_sampling_rate = TTX.ParseEvInfoV(0,...Starting index of records
@@ -145,63 +149,145 @@ for item_no=1%:length(tanks_list)
        %making sure we get all the events.
        
        %firstly create some event counters 
-       step_counter = 1; 
-       events = 1;
+       %step_counter = 1; 
+       %events = 1;
        %create empty list to hold the timestamps
-       timestamp_list = [];
+       %timestamp_list = [];
        
        %while loop as we will update the events variable each time through
        %the loop, this ensures we keep reading until there are no more
-       %events to read 
-       while events > 0
-           
-           %define the start and end steps 
-           start_step = ((step_counter-1)*step)
-           end_sep = (step_counter*step)
-           
-           %Read events in steps 
-           events = TTX.ReadEventsV(max_events_return,... max events to return, sky high
-               events_to_read,... string of which events to read
-               0,... Channel - returns all channels
-               0,... Sortcode - disregards all sort codes
-               start_step,...where to start reading
-               end_step,... where to finish reading
-               'ALL');%Read all events in range
-           
-           %If there are still events being read
-           if (events > 0)
-              
-               %read the timestamps from the just read events - cached
-               %currently
-               timestamps = TTX.ParseEvInfoV(0,... Start at the start of the cache
-                   events,... read the timestamps for the events we just read
-                   6); %read just the timestamps
-               
-               %update the timestamp list with newly read
-               timestamp_list = cat(2,...dimension to concatenate along
-                   timestamp_list,...original timestamp list
-                   timestamps(1,end)); %all the timestamps just read
-               
-           end %end if events are present statement
-           
-           %increment the step counter
-           step_counter = step_counter + 1
-                         
-       end %end while events loop
+       %events to read %
+%       while events > 0
+ %          
+  %         %define the start and end steps 
+   %      start_step = ((step_counter-1)*step)
+    %       end_sep = (step_counter*step)
+     %      
+      %     %Read events in steps 
+       %    events = TTX.ReadEventsV(max_events_return,... max events to return, sky high
+        %       events_to_read,... string of which events to read
+         %      0,... Channel - returns all channels
+          %     0,... Sortcode - disregards all sort codes
+           %    start_step,...where to start reading
+            %   end_step,... where to finish reading
+             %  'ALL');%Read all events in range
+%           
+ %          %If there are still events being read
+  %         if (events > 0)
+   %           
+    %           %read the timestamps from the just read events - cached
+     %          %currently
+      %         timestamps = TTX.ParseEvInfoV(0,... Start at the start of the cache
+       %            events,... read the timestamps for the events we just read
+        %           6); %read just the timestamps
+         %      
+          %     %update the timestamp list with newly read
+           %    timestamp_list = cat(2,...dimension to concatenate along
+            %       timestamp_list,...original timestamp list
+             %      timestamps(1,end)); %all the timestamps just read
+              % 
+%           end %end if events are present statement
+ %          
+  %         %increment the step counter
+   %        step_counter = step_counter + 1
+    %                     
+     %  end %end while events loop
        
        %Create new list which is timestamps with 0 at the starts
-       Timstamps_list_1 = [0, timestamp_list];
+       Timestamps_list = [0:step:1e+6];
        %clear old list to go through loop again for next animal - don't
        %actually need as we redefine as an empty list 
        clear timestamp_list;
        
-       for 
+       
+       %Next step is to read the continuous variables waves
+       %this needs to be done in chunks as otherwise will overload the
+       %memory 
+       
+       %loop through all the different channels to read each one and save
+       %it separately 
+       for channel=1%:num_channels
+           
+           %Set the channel to read
+           TTX.SetGlobalV('Channel', channel);
+           
+           %create variables to hold events 
+           signal=[];
+           
+           %Read the events in chunks determined by the step size listed at
+           %the start and put into the Timestamps list
+           for Chunk=1:(length(Timestamps_list)-1)
+               
+               %have a counter read out to show we are making progress 
+               Chunk
+               
+               %set the time to read between
+               start_read_time=Timestamps_list(Chunk);
+               %finish minus tiny number to make sure not overlapping and
+               %getting all data 
+               end_read_time=Timestamps_list(Chunk+1)-0.0001;
+               
+               %set the read times to be global variables
+               TTX.SetGlobalV('T1', start_read_time)
+               TTX.SetGlobalV('T2', end_read_time)
+               
+               %read the continuous variables, reading the right animal and
+               %signal as defined by events_to_read
+               signal_read = TTX.ReadWavesV(events_to_read);
+             
+               %add the current chunk into a longer array holding all the
+               %signal 
+               %' transposes to let concatenate 
+               signal = [signal signal_read'];
+               
+               %if we have reached the end of the signal, then the
+               %signal_read will be very short, therefore can break out of
+               %the for loop 
+               if length(signal_read) < 1e+4
+                   
+                   %break out of the for loop if signal is too short
+                   break
+                   
+               end %end if signal_read too short statement         
+                
+           end %end of Timestamps_list loop
+           
+           %Scale up the signal
+           signal = signal*10^6;
+           
+           %use resampling function to change from the sampling rate
+           %recorded as to 256
+           signal = A__resampling__(signal,... input signal 
+               record_sampling_rate,... sampling rate recorded as
+               output_sampling_rate,... desired output
+               4,... number of chunks, to split into for faster processing
+               0,... keeps tail length at 20000, last n samples are treated differently
+               visualise); %Visualise as set earlier, 0 off 1 on.
+           
+           
+           %create string for the file name for the saved file
+           save_file_name = [mousename,... mouse name as defined at the start
+               num2str(mouse),... which number animals this is
+               '-',...
+               events_to_read(1:3),... defines what type of signal this is
+               '-',...
+               day_name_string,... add in which day we are recording 
+               '-ch',... add in which channel we are recording
+               num2str(channel)]; %Add in number of which channel we are saving
+               
+           %save the signal 
+           save([output_path save_file_name],...saves in directory as filename
+               signal,...saves the signal
+               '.mat');%saves as a .matfile
+           
+               
+           
+           
+           
+       end %end of channels loop
        
        
-       
-       
-       
-        
+      
        
    
    
