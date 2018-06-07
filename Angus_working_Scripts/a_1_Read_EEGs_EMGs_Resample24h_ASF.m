@@ -86,7 +86,7 @@ for dd=15:18
         % and opening the tank we have defined
         invoke(TTX,'ConnectServer', 'Local', 'Me');
         invoke(TTX,'OpenTank', [pathtanks tank], 'R');
-        pause
+        
         
         % Select the block to access
         invoke(TTX,'SelectBlock', block);
@@ -97,7 +97,7 @@ for dd=15:18
         
         %read the events from the TDT control object
         L = invoke(TTX, 'ReadEventsV', maxret, event123, 1, 0, 0, 1, 'ALL')
-        pause 
+         
         % grab the sampling rate from the TDT file so we can resample
         SR = invoke(TTX, 'ParseEvInfoV', 0, 1, 9)
         
@@ -127,14 +127,17 @@ for dd=15:18
                 timestamps = invoke(TTX, 'ParseEvInfoV', 0, events, 6);
                 %concatenate collected timestamps to the ts list
                 ts = cat(2, ts, timestamps(1,end));
+                
             end
             %??? look at the length of timestamps list each time going over
             %the list?
             length(ts);
+            
             %pause increment step counter
             ii=ii+1;
             %where is the change in events?!?!?!?!???
         end
+        
         
         %grab the timestamps into new list, clear original ts list to use
         %again
