@@ -51,7 +51,7 @@ tank_specific_ = ls([tanks_dir, '*EEG*']);
 tank_specific_dir = [tanks_dir, tank_specific_, '\'];
 
 %create string with full tank path name 
-current_tank_string = [tank_specific_dir];
+current_tank_string = tank_specific_dir;
 
 %create as a directory object 
 tank_specific_dir_obj = dir(tank_specific_dir);
@@ -81,11 +81,9 @@ current_block_string = [tank_specific_dir, tanks_list(5).name];
 
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory 
-<<<<<<< HEAD
+
 for item_no=1:length(tanks_list)
-=======
-for item_no=1%:length(tanks_list)
->>>>>>> parent of 43441e8... 7_6_18
+
     
    %assigns block variable to be equal to the block name string
    block = tanks_list(item_no).name;
@@ -129,7 +127,7 @@ for item_no=1%:length(tanks_list)
            0,...Sortcode - disregards all sort codes
            0,...T1 - starts reading at start of block
            1,...T2 - reads events until 1 - ???
-           'ALL') %Options - read all events records in range
+           'ALL'); %Options - read all events records in range
        
        %Read the sampling rate
        record_sampling_rate = TTX.ParseEvInfoV(0,...Starting index of records
@@ -139,11 +137,7 @@ for item_no=1%:length(tanks_list)
        %setting constants of sampling rate 
        output_sampling_rate = 256;
        
-       
-<<<<<<< HEAD
-       %Create new list which is timestamps with 0 at the starts
-       Timestamps_list = [0:step:1e+6];
-=======
+
        %Now going to read the data from the tank+block in steps to avoid
        %overloading memory. 
        %While reading the events, we are going to grab the timestamps of
@@ -164,8 +158,8 @@ for item_no=1%:length(tanks_list)
        while events > 0
            
            %define the start and end steps 
-           start_step = ((step_counter-1)*step)
-           end_sep = (step_counter*step)
+           start_step = ((step_counter-1)*step);
+           end_sep = (step_counter*step);
            
            %Read events in steps 
            events = TTX.ReadEventsV(max_events_return,... max events to return, sky high
@@ -193,7 +187,7 @@ for item_no=1%:length(tanks_list)
            end %end if events are present statement
            
            %increment the step counter
-           step_counter = step_counter + 1
+           step_counter = step_counter + 1;
                          
        end %end while events loop
        
@@ -202,15 +196,11 @@ for item_no=1%:length(tanks_list)
        %clear old list to go through loop again for next animal - don't
        %actually need as we redefine as an empty list 
        clear timestamp_list;
-       
->>>>>>> parent of 43441e8... 7_6_18
-       
+
        %Next step is to read the continuous variables waves
        %this needs to be done in chunks as otherwise will overload the
        %memory 
-       for 
-       
-<<<<<<< HEAD
+
        %loop through all the different channels to read each one and save
        %it separately 
        for channel=1:num_channels
@@ -300,16 +290,8 @@ for item_no=1%:length(tanks_list)
            %clear the signal ready for next loop - not necessary but clears
            %memory 
            
+           
        end %end of channels loop
-=======
-       
-       
-       
-       
-        
-       
-   
->>>>>>> parent of 43441e8... 7_6_18
    
    end % end mouse loop
    
