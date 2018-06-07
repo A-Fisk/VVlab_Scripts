@@ -24,6 +24,9 @@ num_channels=4;
 %type of recording/output signal
 recording_type = 'EEG';
 
+%Visualise variable for resmpling 
+visualise = 0;
+
 
 
 %%Constants for reading from tanks
@@ -51,7 +54,7 @@ tank_specific_ = ls([tanks_dir, '*EEG*']);
 tank_specific_dir = [tanks_dir, tank_specific_, '\'];
 
 %create string with full tank path name 
-current_tank_string = tank_specific_dir;
+current_tank_string = [tank_specific_dir];
 
 %create as a directory object 
 tank_specific_dir_obj = dir(tank_specific_dir);
@@ -63,7 +66,7 @@ tanks_list = tank_specific_dir_obj(3:(length(tank_specific_dir_obj)-1));
 
 
 %Step two, create directory to hold outputs 
-output_path = [global_directory, 'Output_1'];
+output_path = [global_directory, 'Output_1\'];
 
 %only make output if doesn't exist
 if exist(output_path, 'dir') ~= 7
@@ -77,20 +80,15 @@ end
 %for single day
 %for single mouse
 
-current_block_string = [tank_specific_dir, tanks_list(5).name];
-
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory 
-<<<<<<< HEAD
-
-for item_no=1:length(tanks_list)
-
-=======
 for item_no=3%:length(tanks_list)
->>>>>>> parent of 55cab7e... 7_6_18
     
    %assigns block variable to be equal to the block name string
    block = tanks_list(item_no).name;
+   
+   %create variable of day name so we can save easily
+   day_name_string = tanks_list(item_no).name(6:11);
    
    
    %%%%%%% Development, just doing with one animal
@@ -141,22 +139,7 @@ for item_no=3%:length(tanks_list)
        %setting constants of sampling rate 
        output_sampling_rate = 256;
        
-
-       %Now going to read the data from the tank+block in steps to avoid
-       %overloading memory. 
-       %While reading the events, we are going to grab the timestamps of
-       %the events and put them in a separate list
-       %The purpose of this loop is to get the correct number of events in
-       %the timestamps_list so that we can read the continuous events later
-       %making sure we get all the events.
        
-<<<<<<< HEAD
-       %firstly create some event counters 
-       step_counter = 1; 
-       events = 1;
-       %create empty list to hold the timestamps
-       timestamp_list = [];
-=======
        %Now going to read the data from the tank+block in steps to avoid
        %overloading memory. 
        %While reading the events, we are going to grab the timestamps of
@@ -216,60 +199,14 @@ for item_no=3%:length(tanks_list)
        %actually need as we redefine as an empty list 
        clear timestamp_list;
        
->>>>>>> parent of 55cab7e... 7_6_18
        
-       %while loop as we will update the events variable each time through
-       %the loop, this ensures we keep reading until there are no more
-       %events to read 
-       while events > 0
-           
-           %define the start and end steps 
-           start_step = ((step_counter-1)*step);
-           end_sep = (step_counter*step);
-           
-           %Read events in steps 
-           events = TTX.ReadEventsV(max_events_return,... max events to return, sky high
-               events_to_read,... string of which events to read
-               0,... Channel - returns all channels
-               0,... Sortcode - disregards all sort codes
-               start_step,...where to start reading
-               end_step,... where to finish reading
-               'ALL');%Read all events in range
-           
-           %If there are still events being read
-           if (events > 0)
-              
-               %read the timestamps from the just read events - cached
-               %currently
-               timestamps = TTX.ParseEvInfoV(0,... Start at the start of the cache
-                   events,... read the timestamps for the events we just read
-                   6); %read just the timestamps
-               
-               %update the timestamp list with newly read
-               timestamp_list = cat(2,...dimension to concatenate along
-                   timestamp_list,...original timestamp list
-                   timestamps(1,end)); %all the timestamps just read
-               
-           end %end if events are present statement
-           
-           %increment the step counter
-           step_counter = step_counter + 1;
-                         
-       end %end while events loop
-       
-       %Create new list which is timestamps with 0 at the starts
-       Timstamps_list_1 = [0, timestamp_list];
-       %clear old list to go through loop again for next animal - don't
-       %actually need as we redefine as an empty list 
-       clear timestamp_list;
-
        %Next step is to read the continuous variables waves
        %this needs to be done in chunks as otherwise will overload the
        %memory 
-
+       
        %loop through all the different channels to read each one and save
        %it separately 
-       for channel=1:num_channels
+       for channel=1%:num_channels
            
            %Set the channel to read
            TTX.SetGlobalV('Channel', channel);
@@ -291,8 +228,8 @@ for item_no=3%:length(tanks_list)
                end_read_time=Timestamps_list(Chunk+1)-0.0001;
                
                %set the read times to be global variables
-               TTX.SetGlobalV('T1', start_read_time);
-               TTX.SetGlobalV('T2', end_read_time);
+               TTX.SetGlobalV('T1', start_read_time)
+               TTX.SetGlobalV('T2', end_read_time)
                
                %read the continuous variables, reading the right animal and
                %signal as defined by events_to_read
@@ -339,14 +276,20 @@ for item_no=3%:length(tanks_list)
                num2str(channel)]; %Add in number of which channel we are saving
                
            %save the signal 
-           save([output_path, save_file_name '.mat'],...saves in directory as filename as mat file
-               'signal');%saves the signal 
+           save([output_path save_file_name],...saves in directory as filename
+               signal,...saves the signal
+               '.mat');%saves as a .matfile
            
-           %clear the signal ready for next loop - not necessary but clears
-           %memory 
+               
+           
            
            
        end %end of channels loop
+       
+       
+      
+       
+   
    
    end % end mouse loop
    
