@@ -82,7 +82,7 @@ end
 
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory
-for item_no=1:length(tanks_list)
+for item_no=3%:length(tanks_list)
     
     %assigns block variable to be equal to the block name string
     block = tanks_list(item_no).name;
@@ -238,7 +238,7 @@ for item_no=1:length(tanks_list)
             
             %save the signal
             save([output_path, save_file_name],...saves in directory as filename as mat file
-                'signal', 'block', 'current_tank_string');%saves the signal
+                'signal');%saves the signal
             
             %clear the signal ready for next loop - not necessary but clears
             %memory
