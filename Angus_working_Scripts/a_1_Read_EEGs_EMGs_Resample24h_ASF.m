@@ -193,7 +193,7 @@ for dd=15:18
                     
                     %add in the continuous events - something to do with
                     %resampling. don't understand the ' either
-                    sig=[sig y']
+                    sig=[sig y'];
                     %increment count variable.
                     count=count+1;
                     
