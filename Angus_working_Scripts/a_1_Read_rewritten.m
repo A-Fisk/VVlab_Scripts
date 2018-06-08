@@ -66,7 +66,7 @@ tanks_list = tank_specific_dir_obj(3:(length(tank_specific_dir_obj)-1));
 
 
 %Step two, create directory to hold outputs
-output_path = [global_directory, 'Output_1\'];
+output_path = [global_directory, 'Output_1_mat\'];
 
 %only make output if doesn't exist
 if exist(output_path, 'dir') ~= 7
@@ -159,7 +159,7 @@ for item_no=1:length(tanks_list)
             signal=zeros(1,1e+8);
             
             %create list to hold length of signal_read chunks
-            signal_read_lengths = [];
+            signal_cumulative_lengths = 1;
             
             %Read the events in chunks determined by the step size listed at
             %the start and put into the Timestamps list
@@ -180,31 +180,29 @@ for item_no=1:length(tanks_list)
                 
                 %read the continuous variables, reading the right animal and
                 %signal as defined by events_to_read
-                signal_read = TTX.ReadWavesV(events_to_read);
-                
-                %add length of signal_read to list
-                signal_read_lengths = [signal_read_lengths length(signal_read)];
-                
-                %if statement to properly get places to read from 
-                if Chunk == 1
-                    % if the start the start at the start!
-                    signal_slice_start = 0;
-                %if not the first chunk
-                else 
-                    %then grab the last 
-                    signal_slice_start = signal_read_lengths(Chunk-1);
-                end %end Chunk if statement
-                
+                signal_read = TTX.ReadWavesV(events_to_read);             
+
+                %create variable with new cumulative length
+                temp_cumulative_length = signal_cumulative_lengths + length(signal_read);
                 
                 %add the current chunk into a longer array holding all the
-                %signal
+                %signal, just at this part of the signal
                 %' transposes to let concatenate
-                signal = [signal signal_read'];
+                signal(signal_cumulative_lengths:...
+                    (temp_cumulative_length)-1) ...
+                    = [signal_read'];
+                
+                %add length of signal_read to cumulative sum
+                signal_cumulative_lengths = temp_cumulative_length;
                 
                 %if we have reached the end of the signal, then the
                 %signal_read will be very short, therefore can break out of
                 %the for loop
                 if length(signal_read) < 1e+4
+                    
+                    %also cut down the signal to just the bit with data in
+                    %it
+                    signal = signal(1:signal_cumulative_lengths);
                     
                     %break out of the for loop if signal is too short
                     break
@@ -225,6 +223,8 @@ for item_no=1:length(tanks_list)
                 0,... keeps tail length at 20000, last n samples are treated differently
                 visualise); %Visualise as set earlier, 0 off 1 on.
             
+            %turn into a single precision to reduce memory requirements
+            signal = single(signal);
             
             %create string for the file name for the saved file
             save_file_name = [mousename,... mouse name as defined at the start

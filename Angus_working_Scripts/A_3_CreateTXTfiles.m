@@ -112,7 +112,7 @@ stopband_attenuation_EMG = 20; %Amount of attenuation required for the stopband(
 
 
 %input pathway - CHANGE LATER
-read_directory_name = [global_directory 'OutputSignals\'];
+read_directory_name = [global_directory 'Output_1_mat\'];
 
 %read directory object
 read_directory_obj = dir(read_directory_name);
@@ -155,13 +155,13 @@ end
 % Read in the file 
 
 %loop through all the days 
-for day = 1%:number_of_days
+for day = 1:number_of_days
 
     %define the day to read - matrix slice
     day_to_read = recording_dates(day,:)
     
     %loop through all the animals 
-    for mouse=1%:NUM_ANIMALS
+    for mouse=1:NUM_ANIMALS
         
         %create string of actual name - done by just appending number onto
         %experiment 
@@ -242,7 +242,8 @@ for day = 1%:number_of_days
         
         %save the file in directory and file name as just defined 
         save([save_directory_name save_file_name],...
-            '.txt output -ascii');
+            'output',...
+            '-ascii');
         
     end %end mouse loop 
         
