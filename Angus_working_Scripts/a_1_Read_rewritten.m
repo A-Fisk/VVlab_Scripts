@@ -82,15 +82,14 @@ end
 
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory
-for item_no=1:length(tanks_list)
+for item_no=6:length(tanks_list)
     
     %assigns block variable to be equal to the block name string
-    block = tanks_list(item_no).name;
+    block = tanks_list(item_no).name
     
     %create variable of day name so we can save easily
-    day_name_string = tanks_list(item_no).name(6:11);
-    
-    
+    day_name_string = tanks_list(item_no).name(6:11)
+
     %%%%%%% Development, just doing with one animal
     for mouse=1:num_animals
         
@@ -166,7 +165,7 @@ for item_no=1:length(tanks_list)
             for Chunk=1:(length(Timestamps_list)-1)
                 
                 %have a counter read out to show we are making progress
-                Chunk
+                Chunk;
                 
                 %set the time to read between
                 start_read_time=Timestamps_list(Chunk);
@@ -234,7 +233,7 @@ for item_no=1:length(tanks_list)
                 '-',...
                 day_name_string,... add in which day we are recording
                 '-ch',... add in which channel we are recording
-                num2str(channel)]; %Add in number of which channel we are saving
+                num2str(channel)] %Add in number of which channel we are saving
             
             %save the signal
             save([output_path, save_file_name],...saves in directory as filename as mat file
