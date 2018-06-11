@@ -1,6 +1,7 @@
-%%% Attempting to re-write Read_EEG_EMG_Resample_24 hours script so I am
-%%% certain I understand it.
+%%% Reads data from TDT tanks and saves.
 %%% Input - directory containing TDT tanks
+%%%       - mousename
+%%%       - need to adjust day_name_string slice based on recording name
 %%% Output - output Signals for each animal, day, channel separately
 
 %start by clearing workspace
@@ -82,7 +83,7 @@ end
 
 % for loop to go through each block in turn - same as dd in VVscript
 %looping through all the blocks in the directory
-for item_no=6:length(tanks_list)
+for item_no=6%length(tanks_list)
     
     %assigns block variable to be equal to the block name string
     block = tanks_list(item_no).name
