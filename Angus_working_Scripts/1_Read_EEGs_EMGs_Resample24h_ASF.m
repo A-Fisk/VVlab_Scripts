@@ -52,6 +52,8 @@ tail_length=20000;
 %same with visualize - assuming means not drawing figure 
 visualize=0;
 
+
+pause
 %for loop to run through all the files in recorddates list 
 for dd=15:18
     
@@ -59,7 +61,7 @@ for dd=15:18
     recorddate=recorddates(dd,:);
     %slice the date to use in file name. 
     recd=recorddates(dd,1:6);
-    
+    pause
     %create block variable which is the full file name
     block=['ASF8-',recorddate];
     
