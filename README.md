@@ -1,7 +1,7 @@
 # VVlab_Scripts
 Analysis Scripts for analysing EEG data 
 
-Create_EDF directory contains matlab scripts for creating EDF files available for scoring from TDT tanks 
+Create_EDF directory contains matlab scripts for creating EDF files available for scoring from TDT tanks <br>
   Step 1 - Read TDT Tank
   Step 2 - Create TXT File
   Step 3 **NOT PRESENT** - use SikuliX script to create EDF files using Neurotraces 
