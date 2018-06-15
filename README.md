@@ -1,30 +1,23 @@
 # VVlab_Scripts
+Analysis Scripts for analysing EEG data 
+
+Create_EDF directory contains matlab scripts for creating EDF files available for scoring from TDT tanks <br>
+  Step 1 - Read TDT Tank <br>
+  Step 2 - Create TXT File <br>
+  Step 3 **NOT PRESENT** - use SikuliX script to create EDF files using Neurotraces 
+  
 Matlab scripts for processing the output of TDT synapse.
-
-Input:
-TDT tank recordings
-
-Output:
-EDF files - labelled by date, animal and tank
-Variance profile for EEG and EMG 
-
 
 Pipeline
 
-1_Read_EEGs_EMGs 
-  Function takes TDT tank, createst OuputSIG folder and saves all the channels for each animal and day separately
+1 - Create EDFS
   
-2_PlotEEGandEMGprofiles 
-  Function to plot variance of EEG and EMG over 24 hours
-  Gives rough indication of quality of recordings and level or artefacts
+2 - First Quality Check - Plot EEG and EMG Variance 
   
-3_CreateTXTfile_EEG_EMG
-  Function takes OutputSIG folder files and brings all channels into single file for each animal and day
+3 - Score files in sleep sign 
   
-4_ - NOT IN GITHUB FOLDER - yet - plan to upload SikuliX script for automated version \n
-  Neurotraces then run convert EDF to ASCII with sampling rate of 256 on each file
-  This file then ready to be sleep scored
+4 - Output FFT labelled by sleep stage 
   
-5_ - Sleep scoring 
+5 - Second Quality Check - Plot Delta power by sleep stage in hypnogram, double check for artefact and stage type 
 
-6_ - Analysis -
+6 - Further Analysis
