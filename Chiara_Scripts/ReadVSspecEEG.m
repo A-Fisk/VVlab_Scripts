@@ -3,13 +3,13 @@ clear all
 close all
 
 exte='.txt'
-path='C:\Users\cm419\Desktop\EEG Files\';
+path='D:\LL\EEG Files\';
 
 pathout=['D:\LL\outputVS\']; mkdir(pathout)
 
 mousenames=strvcat('LL7');
-%days=['09';'10';'11';'12';'23';'24';'25'];
-days=['09';'10';'11';'12';'23';'24';'25';'26'];
+%days=['09';'10';'11';'12';'17';'18';'23';'24';'25';'26'];
+days=['09';'10';'11';'12';'17';'18';'23';'24';'25';'26'];
 
 numdays=size(days,1);
 

@@ -4,7 +4,7 @@ close all
 path='D:\LL\';
 
 mousenames=strvcat('LL7');
-days=['09';'10';'11';'12';'23';'24';'25'];
+days=['09';'10';'11';'12';'17';'18';'23';'24';'25';'26'];
 ders=strvcat('fro','occ','foc');
 dername=strvcat('frontal','occipital','fronto-occipital')
 numdays=size(days,1);
