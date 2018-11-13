@@ -1,23 +1,28 @@
-# VVlab_Scripts
-Analysis Scripts for analysing EEG data 
+# VVLab Scripts
 
-Create_EDF directory contains matlab scripts for creating EDF files available for scoring from TDT tanks <br>
-  Step 1 - Read TDT Tank <br>
-  Step 2 - Create TXT File <br>
-  Step 3 **NOT PRESENT** - use SikuliX script to create EDF files using Neurotraces 
-  
-Matlab scripts for processing the output of TDT synapse.
+This is a repository for version controlling and sharing
+scripts for data analysis in the VVlab
 
-Pipeline
+## Getting Started  
 
-1 - Create EDFS
-  
-2 - First Quality Check - Plot EEG and EMG Variance 
-  
-3 - Score files in sleep sign 
-  
-4 - Output FFT labelled by sleep stage 
-  
-5 - Second Quality Check - Plot Delta power by sleep stage in hypnogram, double check for artefact and stage type 
+To get started with this repository clone it to your 
+local machine  
+1. Download github desktop (https://desktop.github.com/)  
+2. Clone repository using github desktop using 
+this url (https://github.com/A-Fisk/VVlab_Scripts)  
+Then all scripts here are on your local 
+machine, properly version controlled and 
+easily updated. No more messy sharing scripts 
+via email! 
 
-6 - Further Analysis
+## Prerequisites.  
+
+1. Matlab (2018)  
+2. SikuliX (http://sikulix.com/)
+
+## Contributing 
+
+I recommend you create your own branch, make all changes
+in that branch, then we go through changes in a coding 
+club to put into the master branch
+
