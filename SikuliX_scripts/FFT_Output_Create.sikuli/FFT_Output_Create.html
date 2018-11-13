@@ -1,0 +1,171 @@
+
+<html>
+   <head>
+      <style type="text/css">
+         .sikuli-code {
+            font-size: 20px;
+            font-family: "Osaka-mono", Monospace;
+            line-height: 1.5em;
+            display:table-cell;
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            width: 99%;   /* remove horizontal scroll-bar when viewing in IE7 */
+         }
+         .sikuli-code img {
+            vertical-align: middle;
+            margin: 2px;
+            border: 1px solid #ccc;
+            padding: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-box-shadow: 1px 1px 1px gray;
+            -webkit-box-shadow: 1px 1px 2px gray;
+         }
+         .kw {
+            color: blue;
+         }
+         .skw {
+            color: rgb(63, 127, 127);
+         }
+
+         .str {
+            color: rgb(128, 0, 0);
+         }
+
+         .dig {
+            color: rgb(128, 64, 0);
+         }
+
+         .cmt {
+            color: rgb(200, 0, 200);
+         }
+
+         h2 {
+            display: inline;
+            font-weight: normal;
+         }
+
+         .info {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            display: none;
+         }
+
+         a {
+            color: #9D2900;
+         }
+
+         body {
+            font-family: "Trebuchet MS", Arial, Sans-Serif;
+         }
+
+      </style>
+   </head>
+<body>
+<div class="info">
+<h2>FFT_Output_Create.sikuli</h2> <a href="FFT_Output_Create.zip">(Download this script)</a>
+</div>
+<pre class="sikuli-code">
+<span class="cmt"># Look through all the files and import into list</span>
+<span class="kw">import</span> glob
+<span class="kw">import</span> os
+
+dir_name = <span class="str">"C:/P3_LLEEG_Chapter3"</span>
+
+dir_path = os.path.normpath(dir_name)
+
+<span class="cmt">#find the files </span>
+files_list = sorted(glob.glob(dir_path + <span class="str">'\\*\\*.raf'</span>))
+
+<span class="kw">print</span> (files_list)
+
+<span class="cmt">#set the output channels</span>
+output_channels = [<span class="str">'-fro.txt'</span>,
+                   <span class="str">'-occ.txt'</span>,
+                   <span class="str">'-foc.txt'</span>]
+
+output_dir = <span class="str">'C:/P3_LLEEG_Chapter3/6_FFT'</span>
+
+output_path = os.path.normpath(output_dir)
+
+<span class="cmt"># Open the SleepSign program</span>
+<span class="cmt">#define and open app</span>
+SleepSign_app = App(<span class="str">r'C:\Program Files (x86)\KISSEI COMTEC\SleepSign for Animal\SleepSign.exe'</span>)
+
+SleepSign_app.open()
+
+
+<span class="cmt"># open the correct file</span>
+
+<span class="kw">for</span> file <span class="kw">in</span> files_list[<span class="dig">2</span>:]:
+
+    <span class="skw">click</span>(<img src="RAF.png" />)
+
+    paste(<img src="file_name_box.png" />,
+            file)
+
+    <span class="skw">click</span>(<img src="open_file_box.png" />)
+
+    <span class="skw">wait</span>(<span class="dig">5</span>)
+
+    <span class="cmt"># save the continuous FFT</span>
+
+    <span class="skw">click</span>(<img src="analysis_box.png" />)
+
+    <span class="skw">click</span>(<img src="fft_output_box.png" />)
+    <span class="skw">click</span>(<img src="continuous_fft_box.png" />)
+
+    <span class="cmt"># create the output names </span>
+
+    file_name = file[-<span class="dig">22</span>:-<span class="dig">4</span>]
+
+    output_names = [(output_path + os.sep +  file_name + x) <span class="kw">for</span> x <span class="kw">in</span> output_channels]
+
+    output_signals = [<img src="signal_0.png" />,
+                      <img src="signal_1.png" />,
+                      <img src="signal_2.png" />]
+
+    <span class="cmt"># loop through and save the txt files in the right places</span>
+    <span class="kw">for</span> signal, file_name <span class="kw">in</span> zip(output_signals, output_names):
+
+        <span class="skw">click</span>(<img src="select_channel_box.png" />)
+
+        <span class="skw">click</span>(<img src="clear_signal_box.png" />)
+
+        <span class="skw">click</span>(signal)
+
+        <span class="skw">click</span>(<img src="signal_ok_box.png" />)
+
+        <span class="skw">click</span>(<img src="path_box.png" />)
+
+        <span class="skw">click</span>(<img src="output_path_box.png" />)
+
+        <span class="skw">type</span>(<span class="str">"a"</span>, KEY_CTRL)
+
+        <span class="skw">type</span>(Key.BACKSPACE)
+
+        paste(file_name)
+
+        <span class="skw">click</span>(<img src="output_save_box.png" />)
+
+        <span class="skw">click</span>(<img src="start_output_box.png" />)
+
+        <span class="skw">wait</span>(<span class="dig">900</span>)
+
+        <span class="skw">type</span>(Key.ENTER)
+
+    <span class="skw">click</span>(<img src="close_post_output.png" />)
+
+    <span class="skw">type</span>(<span class="str">"w"</span>, KEY_CTRL)
+
+<span class="cmt"># create output, save</span>
+<span class="cmt"># create output file names</span>
+<span class="cmt"># loop through output file names and save</span>
+
+</pre>
+</body>
+</html>

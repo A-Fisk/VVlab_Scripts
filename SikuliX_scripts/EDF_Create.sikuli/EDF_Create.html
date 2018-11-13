@@ -1,0 +1,119 @@
+
+<html>
+   <head>
+      <style type="text/css">
+         .sikuli-code {
+            font-size: 20px;
+            font-family: "Osaka-mono", Monospace;
+            line-height: 1.5em;
+            display:table-cell;
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            width: 99%;   /* remove horizontal scroll-bar when viewing in IE7 */
+         }
+         .sikuli-code img {
+            vertical-align: middle;
+            margin: 2px;
+            border: 1px solid #ccc;
+            padding: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-box-shadow: 1px 1px 1px gray;
+            -webkit-box-shadow: 1px 1px 2px gray;
+         }
+         .kw {
+            color: blue;
+         }
+         .skw {
+            color: rgb(63, 127, 127);
+         }
+
+         .str {
+            color: rgb(128, 0, 0);
+         }
+
+         .dig {
+            color: rgb(128, 64, 0);
+         }
+
+         .cmt {
+            color: rgb(200, 0, 200);
+         }
+
+         h2 {
+            display: inline;
+            font-weight: normal;
+         }
+
+         .info {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            display: none;
+         }
+
+         a {
+            color: #9D2900;
+         }
+
+         body {
+            font-family: "Trebuchet MS", Arial, Sans-Serif;
+         }
+
+      </style>
+   </head>
+<body>
+<div class="info">
+<h2>EDF_Create.sikuli</h2> <a href="EDF_Create.zip">(Download this script)</a>
+</div>
+<pre class="sikuli-code">
+<span class="kw">import</span> glob
+
+<span class="cmt">#grab the files we want to use </span>
+files_list = (glob.glob(<span class="str">'C:\LL\Output_2_TXT\**.txt'</span>))
+
+<span class="cmt">#define and open app</span>
+neurotracers_app = App(<span class="str">r'C:\LL\Neurotraces\edfAsc.exe'</span>)
+
+neurotracers_app.open()
+
+<span class="cmt">#select correct configuration </span>
+<span class="skw">doubleClick</span>(<img src="1528795264748.png" />)
+
+<span class="cmt">#change sampling rate to 256 </span>
+<span class="skw">doubleClick</span>(<img src="1528795363108.png" />)
+
+<span class="skw">type</span>(<span class="str">'256'</span>)
+
+<span class="cmt">#loop through all the files </span>
+<span class="kw">for</span> file <span class="kw">in</span> files_list[<span class="dig">109</span>:]:
+
+    <span class="cmt">#select input area </span>
+    input_box = Region(Region(<span class="dig">122</span>,<span class="dig">76</span>,<span class="dig">474</span>,<span class="dig">86</span>)).getBottomLeft()
+
+    <span class="cmt">#paste the file name into the area </span>
+    <span class="skw">doubleClick</span>(input_box)
+    paste(file)
+
+    <span class="cmt">#create the output file name</span>
+    output_name =  file[:<span class="dig">19</span>] + <span class="str">'Script_edf'</span> + file[-<span class="dig">23</span>:-<span class="dig">4</span>] + <span class="str">'.edf'</span>
+
+    <span class="cmt">#copy into the output file_box</span>
+    output_box = Region(Region(<span class="dig">112</span>,<span class="dig">172</span>,<span class="dig">481</span>,<span class="dig">38</span>)).getBottomLeft()
+
+    <span class="skw">doubleClick</span>(output_box)
+    paste(output_name)
+
+    <span class="cmt">#create the file </span>
+    <span class="skw">click</span>(<img src="1528795385001.png" />)
+
+    <span class="cmt">#wait for it to finish analysing</span>
+    <span class="skw">wait</span>(<span class="dig">900</span>)
+
+    <span class="skw">type</span>(Key.ENTER)
+</pre>
+</body>
+</html>
